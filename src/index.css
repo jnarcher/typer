@@ -1,0 +1,16 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono);
+
+:root {
+  font-family: Ubuntu Mono;
+  --base-color: rgb(15, 20, 33);
+  padding-inline: 4rem;
+}
+
+body {
+  background-color: var(--base-color);
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
