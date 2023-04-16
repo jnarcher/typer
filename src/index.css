@@ -2,15 +2,20 @@
 
 :root {
   font-family: Ubuntu Mono;
+  /* font-family: Fira Code; */
   --base-color: rgb(15, 20, 33);
+  --incorrect-color: rgb(255, 83, 83);
   padding-inline: 4rem;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background-color: var(--base-color);
+  background-color: rgb(9, 12, 20);
   color: white;
-  height: 100vh;
+  height: 100%;
+  /* overflow: hidden; */
   display: flex;
-  align-items: center;
+  justify-content: center;
 }
 
