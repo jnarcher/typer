@@ -1,7 +1,8 @@
 /* Test.css */
 
 .Test {
-  overflow: hidden;
+  /* overflow: hidden; */
+  position: relative;
 }
 
 #input-box {
@@ -16,20 +17,21 @@
 }
 
 .blur {
-  width: 100%;
+  width: 110%;
   height: 100%;
-  left: 0;
+  transform: translateX(-5%);
   backdrop-filter: blur(4px);
   position: absolute;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 2;
 }
 
 .click-to-focus {
-  position: absolute;
-  left: calc(50% - 110px);
-  top: 50%;
-  width: 300px;
+  transform: translateX(-30px);
+  width: 175px;
   z-index: 3;
   color: white;
   cursor: pointer;
@@ -80,7 +82,7 @@
 #caret {
   font-size: 22pt;
   position: absolute;
-  /* transition: left 0.1s ease; */
+  transition: left 0.1s ease;
   color: var(--cursor-color);
 }
 

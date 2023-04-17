@@ -95,7 +95,10 @@ function Test(props: TestProps) {
   ];
 
   return (
-    <>
+    <div
+      className="Test"
+      onClick={() => document.getElementById("input-box")?.focus()}
+    >
       <input
         id="input-box"
         onChange={(e) => setUserInput(e.target.value)}
@@ -112,47 +115,47 @@ function Test(props: TestProps) {
           |
         </div>
       )}
-      <div
-        className="Test"
-        onClick={() => document.getElementById("input-box")?.focus()}
-      >
-        {!testFocus && (
-          <>
-            <div className="blur"></div>
+      {!testFocus && (
+        <>
+          <div className="blur">
             <p className="click-to-focus">
               <img src="./src/assets/pointer.png" alt="" />
               Click here to type
             </p>
-          </>
-        )}
-        <div id="words">
-          {words.map((word, wordIdx) => (
-            <div
-              key={wordIdx}
-              className={
-                "word " +
-                classifier[wordIdx].error +
-                (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
-              }
-            >
-              {word.split("").map((letter, letterIdx) => (
-                <span
-                  key={letterIdx}
-                  className={"letter " + classifier[wordIdx].letters[letterIdx] + (testFocus ? "" : " letter-dim")}
-                >
-                  {letter}
-                </span>
-              ))}
-              {classifier[wordIdx].extras !== "" && (
-                <span key={-wordIdx} className="letter incorrect extras">
-                  {classifier[wordIdx].extras}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
+          </div>
+        </>
+      )}
+      <div id="words">
+        {words.map((word, wordIdx) => (
+          <div
+            key={wordIdx}
+            className={
+              "word " +
+              classifier[wordIdx].error +
+              (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
+            }
+          >
+            {word.split("").map((letter, letterIdx) => (
+              <span
+                key={letterIdx}
+                className={
+                  "letter " +
+                  classifier[wordIdx].letters[letterIdx] +
+                  (testFocus ? "" : " letter-dim")
+                }
+              >
+                {letter}
+              </span>
+            ))}
+            {classifier[wordIdx].extras !== "" && (
+              <span key={-wordIdx} className="letter incorrect extras">
+                {classifier[wordIdx].extras}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 }
 
