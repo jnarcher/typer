@@ -2,10 +2,11 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import Test from "./Test";
 
-const QUOTE_API_URL = "https://type.fit/api/quotes";
-const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=15";
 
 function App() {
+  const QUOTE_API_URL = "https://type.fit/api/quotes";
+  const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=15";
+
   const [text, setText] = useState<string>("");
   const [tries, setTries] = useState<number>(0);
 
