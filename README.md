@@ -1,3 +1,3 @@
 # Typer
  
-!()[example.png]
+![](example.png)
