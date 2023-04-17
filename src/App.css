@@ -1,16 +1,10 @@
 .App {
-  padding: 20px;
-  border-radius: 20px;
-  /* box-shadow: 0 0 100px rgba(0, 0, 0, 0.9); */
-  background-color: var(--base-color);
-  min-width: 500px;
-  max-width: 700px;
-  position: relative;
+  justify-content: center;
 }
 
-#reset-button {
+.reset-button {
   background: none;
-  color: rgba(255, 255, 255, 0.151);
+  color: var(--text-default);
   border: none;
   margin-bottom: 10px;
   font-size: 25pt;
@@ -20,6 +14,13 @@
   z-index: 1000;
 }
 
-#reset-button:hover {
-  color: white;
+.reset-button:hover {
+  color: var(--text-correct);
+}
+
+.test-container {
+  display: flex;
+  width: 100%;
+  margin-top: 5rem;
+  justify-content: center;
 }

@@ -90,8 +90,8 @@ function Test(props: TestProps) {
     userInput.length > 0 ? userInput.split(" ")[activeWordIdx].length : 0;
 
   let [caretLeft, caretTop] = [
-    activeWordLeft - 6 + numCharsIntoWord * 13.3,
-    activeWordTop - 4,
+    activeWordLeft - 1 + numCharsIntoWord * 13.3,
+    activeWordTop,
   ];
 
   return (
@@ -111,9 +111,7 @@ function Test(props: TestProps) {
           id="caret"
           className={userInput.length === 0 ? "blink" : ""}
           style={{ left: caretLeft + "px", top: caretTop + "px" }}
-        >
-          |
-        </div>
+        />
       )}
       {!testFocus && (
         <>
@@ -148,7 +146,7 @@ function Test(props: TestProps) {
               </span>
             ))}
             {classifier[wordIdx].extras !== "" && (
-              <span key={-wordIdx} className="letter incorrect extras">
+              <span key={-wordIdx} className="letter extras letter-dim">
                 {classifier[wordIdx].extras}
               </span>
             )}

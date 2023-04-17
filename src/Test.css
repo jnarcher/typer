@@ -1,12 +1,15 @@
 /* Test.css */
 
 .Test {
-  /* overflow: hidden; */
   position: relative;
+  background-color: var(--base-color);
+  min-width: 500px;
+  max-width: 700px;
 }
 
 #input-box {
   position: absolute;
+  outline: none;
   z-index: -1;
 }
 
@@ -18,8 +21,8 @@
 
 .blur {
   width: 110%;
-  height: 100%;
-  transform: translateX(-5%);
+  height: 110%;
+  transform: translate(-5%, -5%);
   backdrop-filter: blur(4px);
   position: absolute;
   cursor: pointer;
@@ -71,19 +74,25 @@
 }
 
 .extras {
-  filter: opacity(30%);
+  color: var(--cursor-color);
 }
 
 .letter-dim {
-  filter: opacity(40%);
+  filter: opacity(50%);
 }
 
 
 #caret {
   font-size: 22pt;
+  width: 2px;
+  height: 30px;
+  border-radius: 2px;
   position: absolute;
+  background-color: var(--cursor-color);
+}
+
+.caret-smooth {
   transition: left 0.1s ease;
-  color: var(--cursor-color);
 }
 
 .blink {

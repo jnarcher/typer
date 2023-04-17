@@ -37,15 +37,29 @@ function App() {
   return (
     <div className="App">
       <button
-        id="reset-button"
+        id="new-words-button"
+        className="reset-button"
+        onClick={() => {
+          setTries((prev) => prev + 1);
+          getWords();
+        }}
+      >
+        {" "}
+        words{" "}
+      </button>
+      <button
+        id="new-quote-button"
+        className="reset-button"
         onClick={() => {
           setTries((prev) => prev + 1);
           getQuote();
         }}
       >
-        +
+        quote
       </button>
-      <Test {...testProps} />
+      <div className="test-container">
+        <Test {...testProps} />
+      </div>
     </div>
   );
 }
