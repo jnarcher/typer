@@ -1,5 +1,86 @@
-.Test {
+/* Test.css */
+
+#input-box {
+  filter: opacity(0);
+  top: -30px;
   position: absolute;
-  top: 50px;
-  transition: top 0.5s ease-out;
+}
+
+/* #TEXT {
+  font-size: 15pt;
+  margin: 0;
+  position: relative;
+  padding: 0;
+  width: 470px;
+}
+
+#author {
+  font-size: 10pt;
+  color: rgb(96, 136, 222); 
+  filter: opacity(70%);
+} */
+
+
+.words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em; /* word spacing */ 
+}
+
+.word {
+  border-bottom: 2px solid var(--base-color);
+}
+
+.error {
+  border-bottom: 2px solid var(--text-incorrect);
+}
+
+.active {
+  border-bottom: 2px solid var(--base-color);
+}
+
+.letter {
+  font-size: 20pt;
+  color: var(--text-default)
+}
+
+.correct {
+  color: var(--text-correct);
+}
+
+.incorrect {
+  color: var(--text-incorrect);
+}
+
+.extras {
+  filter: opacity(25%);
+}
+
+
+#caret {
+  font-size: 22pt;
+  position: absolute;
+  transition: left 0.1s ease;
+  color: var(--cursor-color);
+}
+
+.blink {
+  animation-duration: 0.5s;
+  animation-name: blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease;
+}
+
+@keyframes blink{
+  from {filter: opacity(0);}
+  to {filter: opacity(100%);}
+}
+
+#score {
+  font-size: 20pt;
+  margin-bottom: 0;
+  margin-top: 10px;
+  color: rgb(251, 188, 53);
+  filter: saturate(60%); 
 }

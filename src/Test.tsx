@@ -1,174 +1,152 @@
-import "./Test.css";
 import { useEffect, useState } from "react";
+import "./Test.css";
 
-const QUOTE_API_URL = "https://type.fit/api/quotes";
-
-type ValidText = {
+type TestProps = {
   text: string;
-  author: string | null;
+  tries: number;
 };
 
-export default function Test(props: any) {
-  const [testText, setTestText] = useState<ValidText>({
-    text: "Loading...",
-    author: "Loading...",
-  });
-  const [playerText, setPlayerText] = useState("");
-  const [timerStart, setTimerStart] = useState(-1);
+type WordProps = {
+  error: string;
+  letters: string[];
+  extras: string;
+};
 
-  const date = new Date();
+function Test(props: TestProps) {
+  const words = props.text.split(" ");
 
-  useEffect(() => {
-    fetch(QUOTE_API_URL)
-      .then((data) => data.json())
-      .then((json) => {
-        let x = Math.floor(Math.random() * json.length);
-        let text: ValidText = json[`${x}`];
-        document.getElementById("player-textbox")?.focus();
-        setPlayerText("");
+  useEffect(() => setUserInput(""), [props.tries]);
 
-        let author: string | null = text.author;
-        console.log(author);
+  const [userInput, setUserInput] = useState<string>("");
 
-        if (author === null) author = "Unknown";
+  function classifyWordsAndLetters() {
+    const classifier: WordProps[] = [];
+    const classifierLetters: string[][] = [];
+    const userWords = userInput.split(" ");
 
-        setTestText({
-          text: text.text,
-          author: author,
-        });
-      });
-  }, []);
+    for (let [wordIdx, word] of words.entries()) {
+      let letterClasses = [];
+      const userWord = userWords[wordIdx];
 
-  function handlePlayerInput(e: React.ChangeEvent<HTMLInputElement>) {
-    startTimer();
-    setPlayerText(e.target.value);
-  }
-
-  // Generate text separated by if it matches playerInput
-  function colorizeText() {
-    type ValidText = {
-      text: string;
-      id: string;
-    };
-
-    const sections: ValidText[] = [];
-    let currString = "";
-    let isCorrect = true;
-
-    for (var i = 0; i < playerText.length; ++i) {
-      if (playerText[i] === testText.text[i]) {
-        if (!isCorrect) {
-          sections.push({ text: currString, id: "incorrect-text" });
-          currString = "";
+      if (userWord) {
+        for (let [letterIdx, letter] of word.split("").entries()) {
+          const userLetter = userWord[letterIdx];
+          if (userWord && userLetter) {
+            if (userLetter === letter) {
+              letterClasses.push("correct");
+            } else {
+              letterClasses.push("incorrect");
+            }
+          } else {
+            letterClasses.push("");
+          }
         }
-        isCorrect = true;
-        currString += playerText[i];
       } else {
-        if (isCorrect) {
-          sections.push({ text: currString, id: "correct-text" });
-          currString = "";
-        }
-        isCorrect = false;
-        if (playerText[i] === " ") {
-          sections.push({ text: currString, id: "incorrect-text" });
-          sections.push({ text: "&nbsp;", id: "space-text" });
-          currString = "";
-        } else {
-          currString += playerText[i];
-        }
+        letterClasses = Array(word.length).fill("");
       }
+      classifierLetters.push(letterClasses);
     }
 
-    isCorrect
-      ? sections.push({ text: currString, id: "correct-text" })
-      : sections.push({ text: currString, id: "incorrect-text" });
+    for (let [wordIdx, word] of words.entries()) {
+      let wordProps: WordProps = {
+        error: "",
+        letters: classifierLetters[wordIdx],
+        extras: "",
+      };
 
-    sections.push({ text: testText.text.slice(i), id: "unwritten-text" });
+      let userWord = userWords[wordIdx];
 
-    return sections.map((entry, j) => {
-      if (entry.text === "&nbsp;") {
-        return (
-          <span key={j} className={entry.id}>
-            &nbsp;
-          </span>
-        );
+      if (classifierLetters[wordIdx].includes("incorrect")) {
+        wordProps.error = "error";
       }
-      return (
-        <span key={j} className={entry.id}>
-          {entry.text}
-        </span>
-      );
-    });
+      if (userWord && userWord.length !== word.length) {
+        wordProps.error = "error";
+
+        if (userWord.length > word.length) {
+          let start = userWord.length - (userWord.length - word.length);
+          wordProps.extras = userWord.slice(start);
+        }
+      }
+
+      classifier.push(wordProps);
+    }
+
+    return classifier;
   }
 
-  function handleNewQuote() {
-    // setTimerStart(-1);
-  }
+  const classifier = classifyWordsAndLetters();
 
-  function getSeconds() {
-    let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
-    return seconds + 60 * minutes;
-  }
+  const activeWord = document.querySelector(".active") as HTMLElement;
 
-  function startTimer() {
-    if (timerStart !== -1) return;
+  const wordIdx = activeWord
+    ? activeWord.parentNode
+      ? Array.from(activeWord.parentNode.children).indexOf(activeWord)
+      : -1
+    : -1;
 
-    setTimerStart(getSeconds());
-  }
+  const [activeWordLeft, activeWordTop] = activeWord
+    ? [activeWord.offsetLeft, activeWord.offsetTop]
+    : [0, 0];
 
-  // calculate the position of the cursor
-  let cursorPosLeft = 10.0 * playerText.length - 5;
+  let numCharsIntoWord =
+    userInput.length > 0 ? userInput.split(" ")[wordIdx].length : 0;
 
-  let score = 0;
-  if (playerText.length === testText.text.length) {
-    // handleNewQuote();
-    score = testText.text.length / 5 / ((getSeconds() - timerStart) / 60);
-    document.getElementById("next-quote-button")?.focus();
-  }
+  let [caretLeft, caretTop] = [
+    activeWordLeft - 6 + numCharsIntoWord * 13.3,
+    activeWordTop - 2,
+  ];
+
+  // TODO: make the active word switch on "SPACE".
+  // ! ERROR when backspacing to a previous word.
 
   return (
     <>
+      <input
+        id="input-box"
+        onChange={(e) => setUserInput(e.target.value)}
+        value={userInput}
+      />
+      <div
+        id="caret"
+        className="blink"
+        style={{ left: caretLeft + "px", top: caretTop + "px" }}
+      >
+        |
+      </div>
       <div
         className="Test"
-        style={props.style}
-        onClick={() =>
-          document.getElementById("player-textbox" + `${props.index}`)?.focus()
-        }
+        onClick={() => document.getElementById("input-box")?.focus()}
       >
-        {/* <button id="next-quote-button" onClick={handleNewQuote}>
-          New Quote
-        </button> */}
-        <input
-          type="text"
-          id={`player-textbox${props.index}`}
-          className="player-textbox"
-          value={playerText}
-          onChange={handlePlayerInput}
-        />
-        <div
-          id="TEXT"
-          onClick={() =>
-            document
-              .getElementById("player-textbox" + `${props.index}`)
-              ?.focus()
-          }
-        >
-          {document.getElementById(`player-textbox${props.index}`) ===
-            document.activeElement && (
-            <span
-              id="cursor"
-              className={playerText.length ? "" : "blink"}
-              style={{ left: cursorPosLeft + "px" }}
+        <div className="words">
+          {words.map((word, wordIdx) => (
+            <div
+              key={wordIdx}
+              className={
+                "word " +
+                classifier[wordIdx].error +
+                (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
+              }
             >
-              |
-            </span>
-          )}
-          {colorizeText()}
+              {word.split("").map((letter, letterIdx) => (
+                <span
+                  key={letterIdx}
+                  className={"letter " + classifier[wordIdx].letters[letterIdx]}
+                >
+                  {letter}
+                </span>
+              ))}
+              {classifier[wordIdx].extras !== "" && (
+                <span key={-wordIdx} className="letter incorrect extras">
+                  {classifier[wordIdx].extras}
+                </span>
+              )}
+            </div>
+          ))}
         </div>
-        <p id="author">{testText.author}</p>
-        {Math.round(score) !== 0 && <p id="score">{Math.round(score)} WPM</p>}
       </div>
+      <p style={{ color: "white" }}>Tests taken: {props.tries}</p>
     </>
   );
 }
+
+export default Test;
