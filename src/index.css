@@ -15,8 +15,8 @@
 }
 
 body {
-  background-color: rgb(9, 12, 20);
-  /* background-color: var(--base-color); */
+  /* background-color: rgb(9, 12, 20); */
+  background-color: var(--base-color);
   overflow: hidden;
   height: 100vh;
   display: flex;

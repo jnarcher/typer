@@ -116,6 +116,15 @@ function Test(props: TestProps) {
         className="Test"
         onClick={() => document.getElementById("input-box")?.focus()}
       >
+        {!testFocus && (
+          <>
+            <div className="blur"></div>
+            <p className="click-to-focus">
+              <img src="./src/assets/pointer.png" alt="" />
+              Click here to type
+            </p>
+          </>
+        )}
         <div id="words">
           {words.map((word, wordIdx) => (
             <div
@@ -129,7 +138,7 @@ function Test(props: TestProps) {
               {word.split("").map((letter, letterIdx) => (
                 <span
                   key={letterIdx}
-                  className={"letter " + classifier[wordIdx].letters[letterIdx]}
+                  className={"letter " + classifier[wordIdx].letters[letterIdx] + (testFocus ? "" : " letter-dim")}
                 >
                   {letter}
                 </span>
