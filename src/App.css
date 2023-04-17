@@ -6,14 +6,14 @@
   min-width: 500px;
   max-width: 700px;
   position: relative;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 #reset-button {
   background: none;
   color: rgba(255, 255, 255, 0.151);
   border: none;
-  margin-right: 0;
+  margin-bottom: 10px;
   font-size: 25pt;
   cursor: pointer;
   transition: color 0.2s ease;

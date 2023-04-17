@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import Test from "./Test";
 
 const QUOTE_API_URL = "https://type.fit/api/quotes";
-const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=20";
+const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=15";
 
 function App() {
   const [text, setText] = useState<string>("");
   const [tries, setTries] = useState<number>(0);
+
+  useEffect(getQuote, []);
 
   function getQuote() {
     fetch(QUOTE_API_URL)
@@ -38,7 +40,7 @@ function App() {
         id="reset-button"
         onClick={() => {
           setTries((prev) => prev + 1);
-          getWords();
+          getQuote();
         }}
       >
         +

@@ -1,9 +1,8 @@
 /* Test.css */
 
 #input-box {
-  filter: opacity(0);
-  top: -30px;
   position: absolute;
+  z-index: -1;
 }
 
 /* #TEXT {
@@ -21,7 +20,7 @@
 } */
 
 
-.words {
+#words {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7em; /* word spacing */ 
@@ -53,7 +52,7 @@
 }
 
 .extras {
-  filter: opacity(25%);
+  filter: opacity(30%);
 }
 
 

@@ -7,8 +7,8 @@
   --base-color: rgb(15, 20, 33);
   --text-default   : rgb(47, 62, 93);
   --text-incorrect : rgb(255, 83, 83);
-  --text-correct   : rgb(255, 255, 255); 
-  --cursor-color   : rgb(178, 211, 255);
+  --text-correct   : rgb(174, 220, 255); 
+  --cursor-color   : rgb(255, 255, 255);
 
   margin: 0;
   padding: 0;
@@ -16,6 +16,7 @@
 
 body {
   background-color: rgb(9, 12, 20);
+  /* background-color: var(--base-color); */
   overflow: hidden;
   height: 100vh;
   display: flex;

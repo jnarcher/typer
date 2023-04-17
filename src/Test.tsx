@@ -18,6 +18,7 @@ function Test(props: TestProps) {
   useEffect(() => setUserInput(""), [props.tries]);
 
   const [userInput, setUserInput] = useState<string>("");
+  const [testFocus, setTestFocus] = useState<boolean>(false);
 
   function classifyWordsAndLetters() {
     const classifier: WordProps[] = [];
@@ -76,48 +77,46 @@ function Test(props: TestProps) {
 
   const classifier = classifyWordsAndLetters();
 
-  const activeWord = document.querySelector(".active") as HTMLElement;
-
-  const wordIdx = activeWord
-    ? activeWord.parentNode
-      ? Array.from(activeWord.parentNode.children).indexOf(activeWord)
-      : -1
-    : -1;
+  const activeWordIdx = userInput.split(" ").length - 1;
+  const activeWord = document
+    .getElementById("words")
+    ?.children.item(activeWordIdx) as HTMLElement;
 
   const [activeWordLeft, activeWordTop] = activeWord
     ? [activeWord.offsetLeft, activeWord.offsetTop]
     : [0, 0];
 
   let numCharsIntoWord =
-    userInput.length > 0 ? userInput.split(" ")[wordIdx].length : 0;
+    userInput.length > 0 ? userInput.split(" ")[activeWordIdx].length : 0;
 
   let [caretLeft, caretTop] = [
     activeWordLeft - 6 + numCharsIntoWord * 13.3,
-    activeWordTop - 2,
+    activeWordTop - 4,
   ];
-
-  // TODO: make the active word switch on "SPACE".
-  // ! ERROR when backspacing to a previous word.
 
   return (
     <>
       <input
         id="input-box"
         onChange={(e) => setUserInput(e.target.value)}
+        onFocus={() => setTestFocus(true)}
+        onBlur={() => setTestFocus(false)}
         value={userInput}
       />
-      <div
-        id="caret"
-        className="blink"
-        style={{ left: caretLeft + "px", top: caretTop + "px" }}
-      >
-        |
-      </div>
+      {testFocus && (
+        <div
+          id="caret"
+          className={userInput.length === 0 ? "blink" : ""}
+          style={{ left: caretLeft + "px", top: caretTop + "px" }}
+        >
+          |
+        </div>
+      )}
       <div
         className="Test"
         onClick={() => document.getElementById("input-box")?.focus()}
       >
-        <div className="words">
+        <div id="words">
           {words.map((word, wordIdx) => (
             <div
               key={wordIdx}
@@ -144,7 +143,6 @@ function Test(props: TestProps) {
           ))}
         </div>
       </div>
-      <p style={{ color: "white" }}>Tests taken: {props.tries}</p>
     </>
   );
 }
