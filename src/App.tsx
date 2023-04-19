@@ -1,11 +1,11 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import Test from "./Test";
-
+import { wordList } from "./wordList";
 
 function App() {
   const QUOTE_API_URL = "https://type.fit/api/quotes";
-  const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=15";
+  const WORDS_API_URL = "https://random-word-api.herokuapp.com/word?number=100";
 
   const [text, setText] = useState<string>("");
   const [tries, setTries] = useState<number>(0);
@@ -23,11 +23,17 @@ function App() {
   }
 
   function getWords() {
-    fetch(WORDS_API_URL)
-      .then((data) => data.json())
-      .then((json) => {
-        setText(json.join(" "));
-      });
+    // fetch(WORDS_API_URL)
+    //   .then((data) => data.json())
+    //   .then((json) => {
+    //     setText(json.join(" "));
+    //   });
+    let s = "";
+    for (let i = 0; i < 100; ++i) {
+      let x = Math.floor(Math.random() * wordList.length);
+      s += wordList[x] + " ";
+    }
+    setText(s);
   }
 
   const testProps = {

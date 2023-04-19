@@ -4,11 +4,11 @@
   font-family: Ubuntu Mono;
   /* font-family: Fira Code; */
 
-  --base-color     : rgb(22, 21, 35);
-  --text-default   : rgb(116, 98, 135);
-  --text-incorrect : rgb(255, 46, 168);
-  --text-correct   : rgb(201, 169, 255); 
-  --cursor-color   : rgb(255, 205, 57);
+  --base-color     : rgb(38, 42, 51);
+  --text-default   : rgb(82 103 119);
+  --text-incorrect : rgb(255, 105, 105);
+  --text-correct   : rgb(67, 255, 175); 
+  --cursor-color   : rgb(193, 255, 228);
 
   margin: 0;
   padding: 0;
@@ -20,4 +20,3 @@ body {
   overflow: hidden;
   padding: 20px;
 }
-

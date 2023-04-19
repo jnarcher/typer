@@ -13,12 +13,50 @@ type WordProps = {
 };
 
 function Test(props: TestProps) {
-  const words = props.text.split(" ");
-
-  useEffect(() => setUserInput(""), [props.tries]);
-
+  const [words, setWords] = useState<string[]>(props.text.split(" "));
   const [userInput, setUserInput] = useState<string>("");
   const [testFocus, setTestFocus] = useState<boolean>(false);
+  const [secondLineBegin, setSecondLineBegin] = useState<number>(0);
+
+  useEffect(() => {
+    setWords(props.text.split(" "));
+    setUserInput("");
+    setSecondLineBegin(0);
+  }, [props.tries]);
+
+  // TODO: find some way to not have to magic number these (generate them based on font size??)
+  // calculate caret positioning based on active word
+  let activeWordIdx = userInput.split(" ").length - 1;
+  let activeWord = document
+    .getElementById("words")
+    ?.children.item(activeWordIdx) as HTMLElement;
+
+  let [activeWordLeft, activeWordTop] = activeWord
+    ? [activeWord.offsetLeft, activeWord.offsetTop]
+    : [0, 0];
+
+  let numCharsIntoWord =
+    userInput.length > 0 ? userInput.split(" ")[activeWordIdx].length : 0;
+
+  let [caretLeft, caretTop] = [
+    activeWordLeft - 1.2 + numCharsIntoWord * 11.9,
+    activeWordTop,
+  ];
+
+  // update input and words based on caret line number ("top" style prop)
+  // ! Cursor does not update after lines are adjusted.
+  if (caretTop === 56 && secondLineBegin === 0) {
+    setSecondLineBegin(activeWordIdx);
+  }
+
+  if (caretTop === 92) {
+    let numDeleted = words.slice(0, secondLineBegin).length;
+    setWords((prevWords) => prevWords.slice(secondLineBegin));
+    setUserInput((prevInput) =>
+      prevInput.split(" ").slice(secondLineBegin).join(" ")
+    );
+    setSecondLineBegin(activeWordIdx - numDeleted);
+  }
 
   function classifyWordsAndLetters() {
     const classifier: WordProps[] = [];
@@ -77,23 +115,6 @@ function Test(props: TestProps) {
 
   const classifier = classifyWordsAndLetters();
 
-  const activeWordIdx = userInput.split(" ").length - 1;
-  const activeWord = document
-    .getElementById("words")
-    ?.children.item(activeWordIdx) as HTMLElement;
-
-  const [activeWordLeft, activeWordTop] = activeWord
-    ? [activeWord.offsetLeft, activeWord.offsetTop]
-    : [0, 0];
-
-  let numCharsIntoWord =
-    userInput.length > 0 ? userInput.split(" ")[activeWordIdx].length : 0;
-
-  let [caretLeft, caretTop] = [
-    activeWordLeft - 1 + numCharsIntoWord * 13.3,
-    activeWordTop,
-  ];
-
   return (
     <div
       className="Test"
@@ -109,11 +130,11 @@ function Test(props: TestProps) {
       {testFocus && (
         <div
           id="caret"
-          className={userInput.length === 0 ? "blink" : ""}
+          className={userInput.length === 0 ? "blink " : "" + "caret-smooth"}
           style={{ left: caretLeft + "px", top: caretTop + "px" }}
         />
       )}
-      {!testFocus && (
+      {/* {!testFocus && (
         <>
           <div className="blur">
             <p className="click-to-focus">
@@ -122,7 +143,7 @@ function Test(props: TestProps) {
             </p>
           </div>
         </>
-      )}
+      )} */}
       <div id="words">
         {words.map((word, wordIdx) => (
           <div

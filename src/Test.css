@@ -3,8 +3,11 @@
 .Test {
   position: relative;
   background-color: var(--base-color);
-  min-width: 500px;
-  max-width: 700px;
+  width: 80%;
+  max-width: 900px;
+  height: 80px;
+  padding: 20px;
+  overflow: hidden;
 }
 
 #input-box {
@@ -50,6 +53,8 @@
 
 .word {
   border-bottom: 2px solid var(--base-color);
+  display: flex;
+  letter-spacing: 0.5px;
 }
 
 .error {
@@ -61,7 +66,7 @@
 }
 
 .letter {
-  font-size: 20pt;
+  font-size: 17pt;
   color: var(--text-default)
 }
 
@@ -85,7 +90,7 @@
 #caret {
   font-size: 22pt;
   width: 2px;
-  height: 30px;
+  height: 25px;
   border-radius: 2px;
   position: absolute;
   background-color: var(--cursor-color);
