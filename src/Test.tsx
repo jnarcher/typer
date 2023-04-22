@@ -130,34 +130,36 @@ function Test(props: TestProps) {
         </>
       )} */}
       <div id="words">
-        {words.map((word, wordIdx) => (
-          <div
-            key={wordIdx}
-            className={
-              "word " +
-              classifier[wordIdx].error +
-              (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
-            }
-          >
-            {word.split("").map((letter, letterIdx) => (
-              <span
-                key={letterIdx}
-                className={
-                  "letter " +
-                  classifier[wordIdx].letters[letterIdx] +
-                  (testFocus ? "" : " letter-dim")
-                }
-              >
-                {letter}
-              </span>
-            ))}
-            {classifier[wordIdx].extras !== "" && (
-              <span key={-wordIdx} className="letter extras letter-dim">
-                {classifier[wordIdx].extras}
-              </span>
-            )}
-          </div>
-        ))}
+        {words.map((word, wordIdx) =>
+           (
+            <div
+              key={wordIdx}
+              className={
+                "word " +
+                classifier[wordIdx].error +
+                (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
+              }
+            >
+              {word.split("").map((letter, letterIdx) => (
+                <span
+                  key={letterIdx}
+                  className={
+                    "letter " +
+                    classifier[wordIdx].letters[letterIdx] +
+                    (testFocus ? "" : " letter-dim")
+                  }
+                >
+                  {letter}
+                </span>
+              ))}
+              {classifier[wordIdx].extras !== "" && (
+                <span key={-wordIdx} className="letter extras letter-dim">
+                  {classifier[wordIdx].extras}
+                </span>
+              )}
+            </div>
+          )
+        )}
       </div>
     </div>
   );

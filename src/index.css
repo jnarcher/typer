@@ -8,7 +8,7 @@
   --text-default   : rgb(82 103 119);
   --text-incorrect : rgb(255, 105, 105);
   --text-correct   : rgb(67, 255, 175); 
-  --cursor-color   : rgb(193, 255, 228);
+  --caret-color   : rgb(193, 255, 228);
 
   margin: 0;
   padding: 0;

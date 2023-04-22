@@ -79,7 +79,7 @@
 }
 
 .extras {
-  color: var(--cursor-color);
+  color: var(--caret-color);
 }
 
 .letter-dim {
@@ -93,7 +93,7 @@
   height: 25px;
   border-radius: 2px;
   position: absolute;
-  background-color: var(--cursor-color);
+  background-color: var(--caret-color);
 }
 
 .caret-smooth {

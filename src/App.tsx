@@ -41,6 +41,8 @@ function App() {
     tries,
   };
 
+  // TODO: Make color pallette selectable from options in "config/themes.json"
+
   return (
     <div className="App">
       <button
