@@ -16,12 +16,10 @@ function Test(props: TestProps) {
   const [words, setWords] = useState<string[]>(props.text.split(" "));
   const [userInput, setUserInput] = useState<string>("");
   const [testFocus, setTestFocus] = useState<boolean>(false);
-  const [secondLineBegin, setSecondLineBegin] = useState<number>(0);
 
   useEffect(() => {
     setWords(props.text.split(" "));
     setUserInput("");
-    setSecondLineBegin(0);
   }, [props.tries]);
 
   // TODO: find some way to not have to magic number these (generate them based on font size??)
@@ -43,20 +41,7 @@ function Test(props: TestProps) {
     activeWordTop,
   ];
 
-  // update input and words based on caret line number ("top" style prop)
-  // ! Cursor does not update after lines are adjusted.
-  if (caretTop === 56 && secondLineBegin === 0) {
-    setSecondLineBegin(activeWordIdx);
-  }
-
-  if (caretTop === 92) {
-    let numDeleted = words.slice(0, secondLineBegin).length;
-    setWords((prevWords) => prevWords.slice(secondLineBegin));
-    setUserInput((prevInput) =>
-      prevInput.split(" ").slice(secondLineBegin).join(" ")
-    );
-    setSecondLineBegin(activeWordIdx - numDeleted);
-  }
+  // TODO: Find a way for the text to "scroll" up when third line is reached.
 
   function classifyWordsAndLetters() {
     const classifier: WordProps[] = [];
