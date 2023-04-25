@@ -53,43 +53,12 @@ function Test(props: TestProps) {
     setUserInput(value);
   }
 
-  const userWords = userInput.split(" ");
-
-  if (timer.state === "idle" && userInput !== "") {
-    setTimer((prev) => ({
-      ...prev,
-      start: new Date(),
-      state: "running",
-    }));
-  }
-
-  if (
-    timer.state === "running" &&
-    userWords[userWords.length - 1] === words[words.length - 1]
-  ) {
-    setTimer((prev) => ({
-      ...prev,
-      end: new Date(),
-      state: "finished",
-    }));
-  }
-
-  useEffect(
-    () =>
-      setTimer({
-        start: null,
-        end: null,
-        state: "idle",
-      }),
-    [props.text]
-  );
-
   useEffect(() => {
     setWords(props.text.split(" "));
     setUserInput("");
   }, [props.text]);
 
-  // calculate caret positioning based on active word
+  //* CALCULATE CARET POSITION
   // TODO: find some way to not have to magic number these (generate them based on font size??)
   let activeWordIdx = userInput.split(" ").length - 1;
   let activeWord = document
@@ -108,6 +77,40 @@ function Test(props: TestProps) {
     activeWordTop,
   ];
 
+  //* UPDATE TIMER STATE
+  const userWords = userInput.split(" ");
+  if (timer.state === "idle" && userInput !== "") {
+    setTimer((prev) => ({
+      ...prev,
+      start: new Date(),
+      state: "running",
+    }));
+  }
+
+  if (
+    timer.state === "running" &&
+    userWords.length === words.length &&
+    userWords[userWords.length - 1].length === words[words.length - 1].length
+  ) {
+    setTimer((prev) => ({
+      ...prev,
+      end: new Date(),
+      state: "finished",
+    }));
+  }
+
+  // on text change restart timer
+  useEffect(
+    () =>
+      setTimer({
+        start: null,
+        end: null,
+        state: "idle",
+      }),
+    [props.text]
+  );
+
+  //* CLASSIFY CHARACTERS BASED ON CORRECTNESS
   const classifier: WordProps[] = [];
   const classifierLetters: string[][] = [];
 
@@ -158,22 +161,7 @@ function Test(props: TestProps) {
     classifier.push(wordProps);
   }
 
-  useEffect(() => {
-    if (timer.state === "running") {
-      setTimer((prev) => ({
-        ...prev,
-        start: new Date(),
-      }));
-    } else if (timer.state === "finished") {
-      setTimer((prev) => ({
-        ...prev,
-        end: new Date(),
-      }));
-    } else {
-      setTimer({ start: null, end: null, state: "idle" });
-    }
-  }, [timer.state]);
-
+  //* CALCULATE SCORE
   let adjustedWPM, rawWPM, accuracy;
   if (timer.state === "finished" && timer.end && timer.start) {
     let result = getScore(

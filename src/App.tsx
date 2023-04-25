@@ -9,7 +9,7 @@ const DEFAULT_TEST_PROPERTIES = {
   text: "Loading...",
   type: "words",
   time: 30,
-  wordCount: 50,
+  wordCount: 25,
 };
 
 const WORDCOUNT_OPTIONS = [10, 25, 50, 100];
