@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { getScore } from "./helpers";
 import "./Test.css";
 
@@ -30,6 +30,7 @@ function Test(props: TestProps) {
     end: null,
     state: "idle",
   });
+  // const inputBox = useRef(); //! not working
 
   function handleUserInput(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -43,12 +44,11 @@ function Test(props: TestProps) {
     }
 
     // prevents space if on last word
-    if (
-      userInput.split(" ").length === words.length &&
-      value[value.length - 1] === " "
-    ) {
-      return;
-    }
+    // let userWords = userInput.split(" ");
+    // // ! BUG WHERE YOU CANT GO BACK IF ON LAST WORD AND FIRST CHARACTER IS WRONG
+    // if (userWords.length === words.length && value[value.length - 1] === " ") {
+    //   return;
+    // }
 
     setUserInput(value);
   }
@@ -183,6 +183,7 @@ function Test(props: TestProps) {
       <div id="progression">{activeWordIdx + "/" + words.length}</div>
       <input
         id="input-box"
+        // ref={inputBox.current}
         onChange={handleUserInput}
         value={userInput}
         autoFocus
