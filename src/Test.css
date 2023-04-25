@@ -2,12 +2,10 @@
 
 .Test {
   position: relative;
-  background-color: var(--base-color);
+  background-color: var(--base);
   width: 80%;
   max-width: 900px;
-  height: 80px;
   padding: 20px;
-  overflow: hidden;
 }
 
 #input-box {
@@ -19,6 +17,7 @@
 #words {
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
   gap: 0.7em; /* word spacing */ 
 }
 
@@ -52,7 +51,7 @@
 }
 
 .word {
-  border-bottom: 2px solid var(--base-color);
+  border-bottom: 2px solid var(--base);
   display: flex;
   letter-spacing: 0.5px;
 }
@@ -62,7 +61,7 @@
 }
 
 .active {
-  border-bottom: 2px solid var(--base-color);
+  border-bottom: 2px solid var(--base);
 }
 
 .letter {
@@ -79,13 +78,19 @@
 }
 
 .extras {
-  color: var(--caret-color);
+  color: var(--caret);
 }
 
 .letter-dim {
   filter: opacity(50%);
 }
 
+#progression {
+  font-size: 17pt;
+  color: var(--text-correct);
+  margin-bottom: 10px;
+  align-self: left;
+}
 
 #caret {
   font-size: 22pt;
@@ -93,7 +98,7 @@
   height: 25px;
   border-radius: 2px;
   position: absolute;
-  background-color: var(--caret-color);
+  background-color: var(--caret);
 }
 
 .caret-smooth {
@@ -114,9 +119,9 @@
 }
 
 #score {
-  font-size: 20pt;
-  margin-bottom: 0;
-  margin-top: 10px;
-  color: rgb(251, 188, 53);
-  filter: saturate(60%); 
+  display: flex;
+  color: white;
+  font-size: larger;
+  gap: 20px;
+  margin-top: 30px;
 }

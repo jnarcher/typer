@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { getScore } from "./helpers";
 import "./Test.css";
 
 type TestProps = {
   text: string;
-  tries: number;
+  type: string; // "words" OR "time"
+  time: number;
+  wordCount: number;
 };
 
 type WordProps = {
@@ -12,18 +15,82 @@ type WordProps = {
   extras: string;
 };
 
+type Timer = {
+  start: Date | null;
+  end: Date | null;
+  state: string; // "idle" -> "running" -> "finished"
+};
+
 function Test(props: TestProps) {
   const [words, setWords] = useState<string[]>(props.text.split(" "));
   const [userInput, setUserInput] = useState<string>("");
-  const [testFocus, setTestFocus] = useState<boolean>(false);
+  const [focus, setFocus] = useState<boolean>(false);
+  const [timer, setTimer] = useState<Timer>({
+    start: null,
+    end: null,
+    state: "idle",
+  });
+
+  function handleUserInput(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    // prevents user from skipping words with spacebar
+    if (
+      userInput[userInput.length - 1] === " " &&
+      value[value.length - 1] === " "
+    ) {
+      return;
+    }
+
+    // prevents space if on last word
+    if (
+      userInput.split(" ").length === words.length &&
+      value[value.length - 1] === " "
+    ) {
+      return;
+    }
+
+    setUserInput(value);
+  }
+
+  const userWords = userInput.split(" ");
+
+  if (timer.state === "idle" && userInput !== "") {
+    setTimer((prev) => ({
+      ...prev,
+      start: new Date(),
+      state: "running",
+    }));
+  }
+
+  if (
+    timer.state === "running" &&
+    userWords[userWords.length - 1] === words[words.length - 1]
+  ) {
+    setTimer((prev) => ({
+      ...prev,
+      end: new Date(),
+      state: "finished",
+    }));
+  }
+
+  useEffect(
+    () =>
+      setTimer({
+        start: null,
+        end: null,
+        state: "idle",
+      }),
+    [props.text]
+  );
 
   useEffect(() => {
     setWords(props.text.split(" "));
     setUserInput("");
-  }, [props.tries]);
+  }, [props.text]);
 
-  // TODO: find some way to not have to magic number these (generate them based on font size??)
   // calculate caret positioning based on active word
+  // TODO: find some way to not have to magic number these (generate them based on font size??)
   let activeWordIdx = userInput.split(" ").length - 1;
   let activeWord = document
     .getElementById("words")
@@ -41,126 +108,139 @@ function Test(props: TestProps) {
     activeWordTop,
   ];
 
-  // TODO: Find a way for the text to "scroll" up when third line is reached.
+  const classifier: WordProps[] = [];
+  const classifierLetters: string[][] = [];
 
-  function classifyWordsAndLetters() {
-    const classifier: WordProps[] = [];
-    const classifierLetters: string[][] = [];
-    const userWords = userInput.split(" ");
+  for (let [wordIdx, word] of words.entries()) {
+    let letterClasses = [];
+    const userWord = userWords[wordIdx];
 
-    for (let [wordIdx, word] of words.entries()) {
-      let letterClasses = [];
-      const userWord = userWords[wordIdx];
-
-      if (userWord) {
-        for (let [letterIdx, letter] of word.split("").entries()) {
-          const userLetter = userWord[letterIdx];
-          if (userWord && userLetter) {
-            if (userLetter === letter) {
-              letterClasses.push("correct");
-            } else {
-              letterClasses.push("incorrect");
-            }
+    if (userWord) {
+      for (let [letterIdx, letter] of word.split("").entries()) {
+        const userLetter = userWord[letterIdx];
+        if (userWord && userLetter) {
+          if (userLetter === letter) {
+            letterClasses.push("correct");
           } else {
-            letterClasses.push("");
+            letterClasses.push("incorrect");
           }
-        }
-      } else {
-        letterClasses = Array(word.length).fill("");
-      }
-      classifierLetters.push(letterClasses);
-    }
-
-    for (let [wordIdx, word] of words.entries()) {
-      let wordProps: WordProps = {
-        error: "",
-        letters: classifierLetters[wordIdx],
-        extras: "",
-      };
-
-      let userWord = userWords[wordIdx];
-
-      if (classifierLetters[wordIdx].includes("incorrect")) {
-        wordProps.error = "error";
-      }
-      if (userWord && userWord.length !== word.length) {
-        wordProps.error = "error";
-
-        if (userWord.length > word.length) {
-          let start = userWord.length - (userWord.length - word.length);
-          wordProps.extras = userWord.slice(start);
+        } else {
+          letterClasses.push("");
         }
       }
-
-      classifier.push(wordProps);
+    } else {
+      letterClasses = Array(word.length).fill("");
     }
-
-    return classifier;
+    classifierLetters.push(letterClasses);
   }
 
-  const classifier = classifyWordsAndLetters();
+  for (let [wordIdx, word] of words.entries()) {
+    let wordProps: WordProps = {
+      error: "",
+      letters: classifierLetters[wordIdx],
+      extras: "",
+    };
+
+    let userWord = userWords[wordIdx];
+
+    if (classifierLetters[wordIdx].includes("incorrect")) {
+      wordProps.error = "error";
+    }
+    if (userWord && userWord.length !== word.length) {
+      wordProps.error = "error";
+
+      if (userWord.length > word.length) {
+        let start = userWord.length - (userWord.length - word.length);
+        wordProps.extras = userWord.slice(start);
+      }
+    }
+
+    classifier.push(wordProps);
+  }
+
+  useEffect(() => {
+    if (timer.state === "running") {
+      setTimer((prev) => ({
+        ...prev,
+        start: new Date(),
+      }));
+    } else if (timer.state === "finished") {
+      setTimer((prev) => ({
+        ...prev,
+        end: new Date(),
+      }));
+    } else {
+      setTimer({ start: null, end: null, state: "idle" });
+    }
+  }, [timer.state]);
+
+  let adjustedWPM, rawWPM, accuracy;
+  if (timer.state === "finished" && timer.end && timer.start) {
+    let result = getScore(
+      userInput,
+      words.join(" "),
+      (timer.end.getTime() - timer.start.getTime()) / 1000
+    );
+
+    adjustedWPM = result.adjustedWPM;
+    rawWPM = result.rawWPM;
+    accuracy = result.accuracy;
+  }
 
   return (
     <div
       className="Test"
       onClick={() => document.getElementById("input-box")?.focus()}
     >
+      <div id="progression">{activeWordIdx + "/" + words.length}</div>
       <input
         id="input-box"
-        onChange={(e) => setUserInput(e.target.value)}
-        onFocus={() => setTestFocus(true)}
-        onBlur={() => setTestFocus(false)}
+        onChange={handleUserInput}
         value={userInput}
+        autoFocus
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
       />
-      {testFocus && (
+      {focus && (
         <div
           id="caret"
           className={userInput.length === 0 ? "blink " : "" + "caret-smooth"}
           style={{ left: caretLeft + "px", top: caretTop + "px" }}
         />
       )}
-      {/* {!testFocus && (
-        <>
-          <div className="blur">
-            <p className="click-to-focus">
-              <img src="./src/assets/pointer.png" alt="" />
-              Click here to type
-            </p>
-          </div>
-        </>
-      )} */}
       <div id="words">
-        {words.map((word, wordIdx) =>
-           (
-            <div
-              key={wordIdx}
-              className={
-                "word " +
-                classifier[wordIdx].error +
-                (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
-              }
-            >
-              {word.split("").map((letter, letterIdx) => (
-                <span
-                  key={letterIdx}
-                  className={
-                    "letter " +
-                    classifier[wordIdx].letters[letterIdx] +
-                    (testFocus ? "" : " letter-dim")
-                  }
-                >
-                  {letter}
-                </span>
-              ))}
-              {classifier[wordIdx].extras !== "" && (
-                <span key={-wordIdx} className="letter extras letter-dim">
-                  {classifier[wordIdx].extras}
-                </span>
-              )}
-            </div>
-          )
-        )}
+        {words.map((word, wordIdx) => (
+          <div
+            key={wordIdx}
+            className={
+              "word " +
+              classifier[wordIdx].error +
+              (wordIdx === userInput.split(" ").length - 1 ? " active" : "")
+            }
+          >
+            {word.split("").map((letter, letterIdx) => (
+              <span
+                key={letterIdx}
+                className={"letter " + classifier[wordIdx].letters[letterIdx]}
+              >
+                {letter}
+              </span>
+            ))}
+            {classifier[wordIdx].extras !== "" && (
+              <span key={-wordIdx} className="letter extras letter-dim">
+                {classifier[wordIdx].extras}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
+      {timer.state === "finished" && (
+        <div id="score">
+          <span>WPM: {adjustedWPM}</span>
+          <span>ACC: {accuracy}%</span>
+          <span>RAW: {rawWPM}</span>
+        </div>
+      )}
     </div>
   );
 }

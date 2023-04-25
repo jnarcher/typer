@@ -2,6 +2,29 @@
   justify-content: center;
 }
 
+
+.settings {
+  display: flex;
+  gap: 10px;
+  color: var(--text-default);
+  padding: 10px;
+  background-color: var(--secondary);
+  border-radius: 5px;
+}
+
+.settings > div {
+  cursor: pointer;
+}
+
+.settings > div:hover {
+  color: var(--text-correct);
+}
+
+.selected {
+  color: var(--text-correct);
+}
+
+
 .reset-button {
   background: none;
   color: var(--text-default);
@@ -20,7 +43,9 @@
 
 .test-container {
   display: flex;
+  flex-direction: column;
   width: 100%;
   margin-top: 5rem;
   justify-content: center;
+  align-items: center;
 }

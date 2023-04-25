@@ -3,40 +3,22 @@
     "name": "green",
     "colors": {
       "base": "rgb(38, 42, 51)",
-      "text-default": "rgb(82 103 119)",
+      "secondary": "rgb(28, 32, 38)",
+      "text-default": "rgb(82, 103, 119)",
       "text-correct": "rgb(255, 105, 105)",
       "text-incorrect": "rgb(67, 255, 175)",
-      "cursor": "rgb(193, 255, 228)"
-    }
-  },
-  {
-    "name": "blue",
-    "colors": {
-      "base": "rgb(38, 42, 51)",
-      "text-default": "rgb(82 103 119)",
-      "text-correct": "rgb(255, 105, 105)",
-      "text-incorrect": "rgb(67, 255, 175)",
-      "cursor": "rgb(193, 255, 228)"
-    }
-  },
-  {
-    "name": "black",
-    "colors": {
-      "base": "rgb(38, 42, 51)",
-      "text-default": "rgb(82 103 119)",
-      "text-correct": "rgb(255, 105, 105)",
-      "text-incorrect": "rgb(67, 255, 175)",
-      "cursor": "rgb(193, 255, 228)"
+      "cursor": "rgb(255, 255, 255)"
     }
   },
   {
     "name": "red",
     "colors": {
-      "base": "rgb(38, 42, 51)",
-      "text-default": "rgb(82 103 119)",
-      "text-correct": "rgb(255, 105, 105)",
-      "text-incorrect": "rgb(67, 255, 175)",
-      "cursor": "rgb(193, 255, 228)"
+      "base": "rgb(36, 41, 51)",
+      "secondary": "rgb(0, 0, 0)",
+      "text-default": "rgb(90, 97, 113)",
+      "text-correct": "rgb(236, 76, 86)",
+      "text-incorrect": "rgb(255, 201, 0)",
+      "cursor": "rgb(236, 76, 86)"
     }
   }
 ]
