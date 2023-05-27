@@ -82,17 +82,15 @@ function App() {
   //     });
   // }
 
-  // TODO: Make color pallette selectable from options in "config/themes.json"
-
   return (
     <div className="App">
       <div className="settings">
-        <div
+        {/*<div
           className={testProps.type === "time" ? "selected" : ""}
           onClick={() => handleTestTypeChange("time")}
         >
           time
-        </div>
+        </div>*/}
         <div
           className={testProps.type === "words" ? "selected" : ""}
           onClick={() => handleTestTypeChange("words")}
